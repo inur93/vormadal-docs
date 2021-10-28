@@ -12,10 +12,7 @@ jobs:
     steps:
       - checkout
       - run: yarn global add caprover
-      - run: 
-          name: Caprover deploy
-          command: caprover deploy -h https://captain.caprover.vormadal.com -b $CIRCLE_BRANCH -c ./captain-definition-frontend --appToken $APP_TOKEN  -a vormadal-docs
-      
+      - run: caprover deploy -h https://captain.caprover.vormadal.com -b $CIRCLE_BRANCH -c ./captain-definition-frontend --appToken $APP_TOKEN  -a vormadal-docs
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
