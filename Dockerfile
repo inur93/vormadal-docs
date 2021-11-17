@@ -47,10 +47,10 @@ USER node
 RUN yarn install --frozen-lockfile --production=true
 
 # Copy built js files for server and change ownership to user node. 
-COPY --chown=node:node --from=server /server/build ./server
+COPY --chown=node:node --from=server /server/build /home/node/server
 
 # Copy build js files for react app and change ownership to user node.
 COPY --chown=node:node --from=client /frontend/build ./public
 
 # run the server
-CMD ["node", "./server/server.js"]
+CMD ["node", "./server/src/server.js"]
