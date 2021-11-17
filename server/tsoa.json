@@ -1,0 +1,40 @@
+{
+    "entryFile": "src/app.ts",
+    "noImplicitAdditionalProperties": "throw-on-extras",
+    "controllerPathGlobs": [
+        "src/**/*Controller.ts"
+    ],
+    "spec": {
+        "outputDirectory": "build",
+        "specVersion": 3,
+        "spec": {
+            "servers": [
+                {
+                    "url": "/",
+                    "description": "Current API"
+                }
+            ]
+        },
+        "securityDefinitions": {
+            "jwt": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "tags": [
+            {
+                "name": "Transfers",
+                "description": "You need an API key to access these endpoints."
+            },
+            {
+                "name": "Admin"
+            }
+        ]
+    },
+    "routes": {
+        "routesDir": "build",
+        "iocModule": "./src/inversify/ioc",
+        "authenticationModule": "./src/authentication.ts"
+    }
+}

@@ -1,0 +1,7 @@
+{
+  "exec": "ts-node src/server.ts",
+  "watch": ["./src"],
+  "exclude": ["build"],
+  "ext": "ts",
+  "pollingInterval": 2000
+}

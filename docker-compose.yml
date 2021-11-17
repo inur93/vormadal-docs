@@ -1,0 +1,72 @@
+version: "3.8"
+services:
+  mongo:
+    image: mongo:5.0.3
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_APP_USERNAME: dbadmin
+      MONGO_INITDB_APP_PASSWORD: pass
+      # if volume already exists the database will not be initialized
+      MONGO_INITDB_DATABASE: vormadal_docs
+    volumes:
+      - mongodata:/data/db
+      - ./mongo/data/:/etc/mongo
+      - ./mongo/init:/docker-entrypoint-initdb.d:ro
+    networks: 
+      - mongo
+
+  mongo-express:
+    image: mongo-express:1.0.0-alpha.4
+    restart: always
+    ports:
+      - 8091:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+    networks:
+      - mongo
+
+  frontend:
+    image: docs-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      CHOKIDAR_USEPOLLING: "true"
+    # command: sh -c "chokidar_usepolling=true yarn start"
+    ports:
+      - 4000:3000
+    networks:
+      - mongo
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+  docs-api:
+    image: docs-api
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      MONGO_URI: mongodb://dbadmin:pass@mongo:27017/vormadal_docs
+      PORT: 8000
+      DEFAULT_ADMIN_EMAIL: admin@vormadal.com
+      DEFAULT_ADMIN_PASSWORD: example
+      JWT_SECRET: should-be-very-secret
+    ports:
+      - 8010:8000
+      # - 9229:9229
+    networks:
+      - mongo
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+
+networks:
+  mongo:
+    driver: bridge
+volumes:
+  mongodata:
