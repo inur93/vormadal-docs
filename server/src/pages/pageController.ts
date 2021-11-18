@@ -22,7 +22,7 @@ import { UpdatePage } from './updatePage';
 
 @Security("jwt", ['Admin'])
 @Response<UnauthorizedException>(401, "Unauthorized")
-@Tags('Common')
+@Tags('Page')
 @Route("pages")
 @provideSingleton(PagesController)
 export class PagesController extends Controller {

@@ -1,6 +1,6 @@
-import { createContext } from "react";
-import { JwtToken, GetUser } from "../api";
 import jwtDecode from 'jwt-decode';
+import { createContext } from "react";
+import { GetUser } from "../api";
 import { getStoredJwt } from "../utils/security";
 
 export class AuthUser {

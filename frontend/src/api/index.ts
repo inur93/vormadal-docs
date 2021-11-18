@@ -22,4 +22,4 @@ export type { UserAlreadyExistsException } from './models/UserAlreadyExistsExcep
 export type { UserCredentials } from './models/UserCredentials';
 
 export { AdminService } from './services/AdminService';
-export { CommonService } from './services/CommonService';
+export { PageService } from './services/PageService';

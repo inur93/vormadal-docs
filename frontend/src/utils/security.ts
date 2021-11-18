@@ -1,5 +1,5 @@
-import { GetUser, OpenAPI } from "../api";
 import decodeJwt from 'jwt-decode';
+import { OpenAPI } from "../api";
 type JwtData = {
     exp: number,
     iat: number

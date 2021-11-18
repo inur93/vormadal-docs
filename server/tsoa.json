@@ -24,11 +24,12 @@
         },
         "tags": [
             {
-                "name": "Transfers",
-                "description": "You need an API key to access these endpoints."
+                "name": "Page",
+                "description": "Allows you to read, create, update and delete pages."
             },
             {
-                "name": "Admin"
+                "name": "Admin",
+                "description": "This section is for users with admin role. This will allow you to manage users."
             }
         ]
     },

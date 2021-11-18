@@ -1,12 +1,11 @@
+import { Cancel, ContentCopy, Delete, Save } from '@mui/icons-material';
+import { Button, Card, CardContent, Grid, TextField, Typography } from '@mui/material';
 import MDEditor from '@uiw/react-md-editor';
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CommonService, GetPage } from '../../api';
-import { Button, Card, CardContent, Container, Grid, IconButton, Paper, TextField, Typography } from '@mui/material';
-import { Cancel, CancelOutlined, ContentCopy, Delete, Save } from '@mui/icons-material';
+import { PageService, GetPage } from '../../api';
 import { EventBus, EventType } from '../../utils/eventBus';
-import { fancyDate } from '../../utils/stringFunctions';
+import {routes} from '../../utils/routes';
 
 const Editor = () => {
     const [content, setContent] = useState('');
@@ -14,19 +13,21 @@ const Editor = () => {
     const [page, setPage] = useState<GetPage>();
     const params = useParams();
     const navigate = useNavigate();
+
     useEffect(() => {
         if (params.id) {
-            CommonService.getPage(params.id).then(setPage);
+            PageService.getPage(params.id).then(setPage);
         }
-    }, [params.id])
+    }, [params.id]);
+
     useEffect(() => {
         setContent(page?.content ?? '');
         setTitle(page?.title ?? '');
-    }, [page])
+    }, [page]);
 
     const handleSave = async () => {
         if (params.id) {
-            const updated = await CommonService.updatePage(params.id, {
+            const updated = await PageService.updatePage(params.id, {
                 content, title
             })
             EventBus.dispatch(EventType.PAGE_UPDATED, updated);
@@ -35,14 +36,14 @@ const Editor = () => {
     }
 
     const handleCopy = async () => {
-        const created = await CommonService.createPage({ title: `${title} Copy`, content });
+        const created = await PageService.createPage({ title: `${title} Copy`, content });
         EventBus.dispatch(EventType.PAGE_CREATED, created);
-        navigate(`/page/edit/${created.id}`);
+        navigate(routes.editPage(created.id));
     }
 
     const handleDelete = async () => {
         if (!params.id) return;
-        await CommonService.deletePage(params.id);
+        await PageService.deletePage(params.id);
         EventBus.dispatch(EventType.PAGE_DELETED, params.id);
         navigate(`/`, { replace: true });
     }
@@ -79,7 +80,7 @@ const Editor = () => {
                         color='primary'
                         variant='outlined'
                         startIcon={<Cancel />}
-                        onClick={() => navigate(`/page/${params.id}`)}>
+                        onClick={() => navigate(routes.page(params.id))}>
                         Cancel
                     </Button>
                     {' '}

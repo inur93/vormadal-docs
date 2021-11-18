@@ -2,32 +2,33 @@ import { Add, Description } from '@mui/icons-material';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { CommonService, GetPageSummary } from '../../api';
+import { PageService, GetPageSummary } from '../../api';
 import { EventBus, EventType } from '../../utils/eventBus';
+import {routes} from '../../utils/routes';
 
 export const TreeView = () => {
     const [pages, setPages] = useState<GetPageSummary[]>([]);
     const params = useParams();
     const navigate = useNavigate();
     useEffect(() => {
-        CommonService.getAllPages().then(setPages);
+        PageService.getAllPages().then(setPages);
         const listeners = [
             [
                 EventType.PAGE_CREATED,
                 EventBus.on(EventType.PAGE_CREATED, () => {
-                    CommonService.getAllPages().then(setPages)
+                    PageService.getAllPages().then(setPages)
                 })
             ],
             [
                 EventType.PAGE_UPDATED,
                 EventBus.on(EventType.PAGE_UPDATED, () => {
-                    CommonService.getAllPages().then(setPages)
+                    PageService.getAllPages().then(setPages)
                 })
             ],
             [
                 EventType.PAGE_DELETED,
                 EventBus.on(EventType.PAGE_DELETED, () => {
-                    CommonService.getAllPages().then(setPages)
+                    PageService.getAllPages().then(setPages)
                 })
             ]
         ]
@@ -36,11 +37,11 @@ export const TreeView = () => {
         }
     }, []);
     const handleCreate = async () => {
-        const page = await CommonService.createPage({
+        const page = await PageService.createPage({
             title: "New Page",
             content: "content"
         });
-        navigate(`/page/${page.id}`);
+        navigate(routes.editPage(page.id));
         EventBus.dispatch(EventType.PAGE_CREATED, page);
     }
     return <List dense>
@@ -48,13 +49,13 @@ export const TreeView = () => {
             <ListItemIcon>
                 <Add />
             </ListItemIcon>
-            <ListItemText primary="Create page" />
+            <ListItemText primary="Create Page" />
         </ListItemButton>
         {pages.map(x =>
             <ListItemButton
                 key={x.id}
                 selected={x.id === params.id}
-                onClick={() => navigate(`/page/${x.id}`)}>
+                onClick={() => navigate(routes.page(x.id))}>
                 <ListItemIcon>
                     <Description />
                 </ListItemIcon>

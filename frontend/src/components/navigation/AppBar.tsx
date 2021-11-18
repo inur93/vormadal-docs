@@ -10,8 +10,6 @@ export const AppBar = () => {
         if (auth.isLoggedIn) {
             storeJwt('');
             setAuth(new AuthUser());
-        } else {
-
         }
     }
     return <MuiAppBar position='fixed'>

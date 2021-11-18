@@ -1,4 +1,3 @@
-import { listenerCount } from "process";
 
 export const EventType = {
     PAGE_CREATED: 'PAGE_CREATED',
@@ -16,7 +15,7 @@ export const EventBus = {
     dispatch<T>(event: string, data: T) {
         document.dispatchEvent(new CustomEvent<T>(event, { detail: data }));
     },
-    remove<T>(event: string, callback: (e: Event) => void) {
+    remove(event: string, callback: (e: Event) => void) {
         document.removeEventListener(event, callback);
     },
 }

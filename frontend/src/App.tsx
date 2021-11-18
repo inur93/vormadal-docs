@@ -1,37 +1,32 @@
-import React, { useState } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import { OpenAPI } from './api';
 import './App.css';
 import Editor from './components/editor/MarkdownEditor';
 import { Layout } from './components/Layouts';
 import { Page } from './components/pageView/Page';
 import AuthContext, { AuthUser } from './contexts/AuthContext';
+import { add401interceptor } from './utils/interceptors';
+import {routes} from './utils/routes';
 
 const { origin } = window.location;
 OpenAPI.BASE = origin;
 
-const Container = styled.section`
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    align-content: stretch;
-`;
 function App() {
   const [auth, setAuth] = useState(new AuthUser());
+  useEffect(() => {
+    add401interceptor(setAuth);
+  }, []);
   return (
     <AuthContext.Provider value={[auth, setAuth]}>
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
-          <Route path='/' element={<Layout />}>
-            <Route path='/page/edit/:id' element={<Editor />} />
-            <Route path='/page/:id' element={<Page />} />
+          <Route path={routes.root()} element={<Layout />}>
+            <Route path={routes.editPage()} element={<Editor />} />
+            <Route path={routes.page()} element={<Page />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </AuthContext.Provider>
   );
 }

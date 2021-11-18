@@ -1,11 +1,11 @@
 import { ContentCopy, Delete, Edit } from "@mui/icons-material";
-import { Button, Card, CardContent, Grid, IconButton, Typography } from "@mui/material";
-import MDEditor from "@uiw/react-md-editor"
+import { Button, Card, CardContent, Grid, Typography } from "@mui/material";
+import MDEditor from "@uiw/react-md-editor";
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from 'react-router-dom';
-import styled from "styled-components";
-import { CommonService, GetPage } from "../../api";
+import { useNavigate, useParams } from 'react-router-dom';
+import { PageService, GetPage } from "../../api";
 import { EventBus, EventType } from "../../utils/eventBus";
+import {routes} from "../../utils/routes";
 import { fancyDate } from "../../utils/stringFunctions";
 
 
@@ -21,7 +21,7 @@ export const Page = (props: Props) => {
     useEffect(() => {
         if (params.id) {
             setNotFound(false);
-            CommonService.getPage(params.id)
+            PageService.getPage(params.id)
                 .then(setPage)
                 .catch(err => {
                     if (err?.response?.status === 404) {
@@ -32,16 +32,16 @@ export const Page = (props: Props) => {
     }, [params.id])
     
     const handleCopy = async () => {
-        const created = await CommonService.createPage({
+        const created = await PageService.createPage({
             title: `${page?.title} Copy`, content: page?.content || ''
         });
         EventBus.dispatch(EventType.PAGE_CREATED, created);
-        navigate(`/page/${created.id}`);
+        navigate(routes.editPage(created.id));
     }
 
     const handleDelete = async () => {
         if (!params.id) return;
-        await CommonService.deletePage(params.id);
+        await PageService.deletePage(params.id);
         EventBus.dispatch(EventType.PAGE_DELETED, params.id);
         navigate(`/`, { replace: true });
     }
@@ -73,7 +73,7 @@ export const Page = (props: Props) => {
                             color='primary'
                             variant='outlined'
                             startIcon={<Edit />}
-                            onClick={() => navigate(`/page/edit/${params.id}`)}>
+                            onClick={() => navigate(routes.editPage(params.id))}>
                             Edit
                         </Button>
                         {' '}

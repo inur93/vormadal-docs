@@ -8,7 +8,7 @@ import type { Omit_UpdatePage__id_ } from '../models/Omit_UpdatePage__id_';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { request as __request } from '../core/request';
 
-export class CommonService {
+export class PageService {
 
     /**
      * @returns GetPageSummary Ok
