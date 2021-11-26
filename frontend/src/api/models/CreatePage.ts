@@ -5,4 +5,5 @@
 export type CreatePage = {
     title: string;
     content: string;
+    folder?: string;
 }

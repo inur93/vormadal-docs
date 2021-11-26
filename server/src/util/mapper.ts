@@ -1,3 +1,5 @@
+import { Folder } from "../folders/folder";
+import { GetFolder } from "../folders/folderViewModels";
 import { Page } from "../pages/page";
 import { GetPage, GetPageSummary } from "../pages/pageViewModels";
 import { User } from "../users/user";
@@ -10,7 +12,7 @@ class Mapper {
         return { id: _id.toJSON(), email, name, roles }
     }
 
-    public toGetPageSummary({ _id, title, createdOn, createdBy, modifiedOn, modifiedBy, author }: Page): GetPageSummary {
+    public toGetPageSummary({ _id, title, createdOn, createdBy, modifiedOn, modifiedBy, author, folder }: Page): GetPageSummary {
         return {
             id: _id.toJSON(),
             title,
@@ -18,7 +20,8 @@ class Mapper {
             modifiedOn,
             createdBy: (createdBy as User)?.name,
             modifiedBy: (modifiedBy as User)?.name,
-            author: (author as User)?.name
+            author: (author as User)?.name,
+            folder
         }
     }
 
@@ -32,6 +35,14 @@ class Mapper {
             createdBy: (createdBy as User)?.name,
             modifiedBy: (modifiedBy as User)?.name,
             author: (author as User)?.name
+        }
+    }
+
+    public toGetFolder({ _id, name, parentFolder }: Folder): GetFolder {
+        return {
+            id: _id.toJSON(),
+            name,
+            parentFolder
         }
     }
 

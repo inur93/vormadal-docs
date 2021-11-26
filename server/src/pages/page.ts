@@ -6,7 +6,7 @@ export interface Page {
      * Generated id by Mongo
      */
     _id: Types.ObjectId;
-    folder: string;
+    folder?: string;
     title: string;
     content: string;
     tags: string[];

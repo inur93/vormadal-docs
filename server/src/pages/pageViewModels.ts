@@ -13,5 +13,6 @@ export type GetPageSummary = Pick<Page, 'title' | 'modifiedOn' | 'createdOn'> & 
     id: string
     author: string,
     modifiedBy: string,
-    createdBy: string
+    createdBy: string,
+    folder?: string
 }

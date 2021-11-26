@@ -14,7 +14,7 @@ export class PagesService {
                 { deleted: false },
                 { deleted: { $exists: false } }
             ]
-        }, 'title createdOn modifiedOn author createdBy modifiedBy')
+        }, 'title folder createdOn modifiedOn author createdBy modifiedBy')
             .populate('author', 'name')
             .populate('createdBy', 'name')
             .populate('modifiedBy', 'name')
