@@ -12,7 +12,6 @@ import { CreateFolderDialog, CreatePageDialog } from '../dialog/FormDialog';
 import { Node, TreeNode } from './TreeNode';
 
 const addChildNodes = (node: Node, pages: Node[], folders: Node[], leaf: boolean): Node => {
-    const nodeId = node.id === 'root' ? undefined : node.id;
     return {
         id: node.id,
         name: node.name,
@@ -20,10 +19,10 @@ const addChildNodes = (node: Node, pages: Node[], folders: Node[], leaf: boolean
         leaf,
         children: [
             ...folders
-                .filter(x => x.parent === nodeId)
+                .filter(x => x.parent === node.id)
                 .map(x => addChildNodes(x, pages, folders, false)),
             ...pages
-                .filter(x => x.parent === nodeId)
+                .filter(x => x.parent === node.id)
                 .map(x => addChildNodes(x, pages, folders, true))
         ]
     }
@@ -82,7 +81,7 @@ export const TreeView = () => {
                 folders.map(x => ({
                     id: x.id,
                     name: x.name,
-                    parent: x.parentFolder as string,
+                    parent: (x.parentFolder as string) ?? 'root',
                     children: [],
                     leaf: false
                 })),
