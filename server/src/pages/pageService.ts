@@ -1,5 +1,7 @@
+import { ObjectID } from 'bson';
 import { } from '../inversify/ioc';
 import { provideSingleton } from "../util/provideSingleton";
+import { slugify } from '../util/slugFunctions';
 import { GetUser } from '../viewModels/users/getUser';
 import { CreatePage } from './createPage';
 import PageModel, { Page } from "./page";
@@ -8,13 +10,15 @@ import { UpdatePage } from "./updatePage";
 @provideSingleton(PagesService)
 export class PagesService {
 
+    constructor() { }
+
     public async list(): Promise<Page[]> {
         const results = await PageModel.find({
             $or: [
                 { deleted: false },
                 { deleted: { $exists: false } }
             ]
-        }, 'title folder createdOn modifiedOn author createdBy modifiedBy')
+        }, 'title slug folder createdOn modifiedOn author createdBy modifiedBy')
             .populate('author', 'name')
             .populate('createdBy', 'name')
             .populate('modifiedBy', 'name')
@@ -22,10 +26,14 @@ export class PagesService {
         return results.map(x => x.toObject());
     }
 
-    public async get(_id: string): Promise<Page> {
+    public async get(identifier: string): Promise<Page> {
+        const query = ObjectID.isValid(identifier) ?
+            { $or: [{ _id: identifier }, { slug: identifier }] } :
+            { slug: identifier }
+
         return await PageModel.findOne({
             $and: [
-                { _id: _id },
+                query,
                 {
                     $or: [
                         { deleted: false },
@@ -54,8 +62,10 @@ export class PagesService {
 
     public async create(page: CreatePage, user: GetUser): Promise<Page> {
         const now = new Date();
+        const slug = slugify(page.title);
         return await PageModel.create({
             ...page,
+            slug,
             createdOn: now,
             modifiedOn: now,
             createdBy: user.id,

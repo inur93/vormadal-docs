@@ -19,9 +19,9 @@ export const Page = (props: Props) => {
     const [page, setPage] = useState<GetPage>();
     const [notFound, setNotFound] = useState(false);
     useEffect(() => {
-        if (params.id) {
+        if (params.slug) {
             setNotFound(false);
-            PageService.getPage(params.id)
+            PageService.getPage(params.slug)
                 .then(setPage)
                 .catch(err => {
                     if (err?.response?.status === 404) {
@@ -29,7 +29,7 @@ export const Page = (props: Props) => {
                     }
                 })
         }
-    }, [params.id])
+    }, [params.slug])
     
     const handleCopy = async () => {
         const created = await PageService.createPage({
@@ -40,9 +40,9 @@ export const Page = (props: Props) => {
     }
 
     const handleDelete = async () => {
-        if (!params.id) return;
-        await PageService.deletePage(params.id);
-        EventBus.dispatch(EventType.PAGE_DELETED, params.id);
+        if (!page?.id) return;
+        await PageService.deletePage(page.id);
+        EventBus.dispatch(EventType.PAGE_DELETED, page.id);
         navigate(`/`, { replace: true });
     }
     if (notFound) {
@@ -73,7 +73,7 @@ export const Page = (props: Props) => {
                             color='primary'
                             variant='outlined'
                             startIcon={<Edit />}
-                            onClick={() => navigate(routes.editPage(params.id))}>
+                            onClick={() => navigate(routes.editPage(page.id))}>
                             Edit
                         </Button>
                         {' '}

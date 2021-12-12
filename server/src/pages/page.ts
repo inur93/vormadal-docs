@@ -6,6 +6,7 @@ export interface Page {
      * Generated id by Mongo
      */
     _id: Types.ObjectId;
+    slug: string;
     folder?: string;
     title: string;
     content: string;
@@ -20,6 +21,10 @@ export interface Page {
 
 const PageSchemaFields: Record<keyof Omit<Page, '_id'>, any> = {
     folder: String,
+    slug: {
+        type: String,
+        required: true
+    },
     title: String,
     content: String,
     tags: [String],
@@ -46,4 +51,5 @@ const PageSchemaFields: Record<keyof Omit<Page, '_id'>, any> = {
 export interface PageDoc extends Omit<Page, '_id'>, Document { }
 export interface PageModel extends Model<PageDoc> { }
 export const PageSchema = new Schema<PageDoc, PageModel>(PageSchemaFields);
+PageSchema.index({ slug: 1 })
 export default models.Page || model<PageDoc>('Page', PageSchema);

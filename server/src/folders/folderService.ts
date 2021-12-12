@@ -34,7 +34,7 @@ export class FoldersService {
         const children = this.getChildFolders(id, all, [id]);
         const parent = all.find(x => x._id.toJSON() === id).parentFolder;
         // const pages = await PageModel.find({ folder: id });
-        
+
         for (let child of children) {
             console.log('update pages in folder', child, 'to parent', parent)
             await PageModel.updateMany({
@@ -52,6 +52,23 @@ export class FoldersService {
             }
         });
         console.log('res', res);
+    }
+
+    public async getPathFor(id?: string): Promise<string> {
+        const all = await FolderModel.find({});
+
+        let current = id;
+        let folders = [];
+        while (true) {
+            let folder: Folder = all.find(x => x._id.toJSON() === current);
+            if (!folder) break;
+            console.log('folder', folder.parentFolder, folder.name);
+            folders.push(folder.name);
+            current = folder.parentFolder?.toString();
+            if (!current) break;
+        }
+
+        return folders.reverse().join("/");
     }
 
     public getChildFolders(id: string, all: Folder[], list: string[]) {

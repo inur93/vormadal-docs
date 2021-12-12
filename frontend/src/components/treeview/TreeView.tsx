@@ -48,16 +48,18 @@ export const TreeView = () => {
             for (let child of node.children) {
                 match = match || find(child, id, list);
             }
-            if(match){
+            if (match) {
                 list.push(node.id);
             }
             return match;
         }
-        if(!data || !params.id) return;
+        if (expanded.length > 1 || !data || (!params.id && !params.slug)) return;
         let list: string[] = ['root'];
-        find(data, params.id, list);
+        let id = !!params.id ? params.id : pages.find(x => x.slug === params.slug)?.id;
+        if (!id) return;
+        find(data, id, list);
         setExpanded(list);
-    }, [params.id, data])
+    }, [params.id, params.slug, data, pages, expanded])
 
     useEffect(() => {
         const root: Node = {
@@ -228,8 +230,9 @@ export const TreeView = () => {
         onNodeToggle={handleToggle}
         onNodeSelect={(e: React.SyntheticEvent, id: string) => {
             e.preventDefault();
-            if (pages.find(x => x.id === id)) {
-                navigate(routes.editPage(id));
+            const page = pages.find(x => x.id === id);
+            if (page) {
+                navigate(routes.page(page.slug));
             }
         }}
         defaultCollapseIcon={<ExpandMore />}

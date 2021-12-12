@@ -41,11 +41,11 @@ export class PagesController extends Controller {
 
     /**
      * 
-     * @param pageId the unique id of the page
+     * @param identifier the UUID or slug of the page
      */
-    @Get("{pageId}")
-    public async getPage(@Path() pageId: string): Promise<GetPage> {
-        const result = await this.pageService.get(pageId);
+    @Get("{identifier}")
+    public async getPage(@Path() identifier: string): Promise<GetPage> {
+        const result = await this.pageService.get(identifier);
         if (result) {
             return mapper.toGetPage(result);
         }

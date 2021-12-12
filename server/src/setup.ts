@@ -1,5 +1,7 @@
 import UserModel, { Role } from './users/user';
+import PageModel from './pages/page';
 import security from './util/security';
+import { slugify } from './util/slugFunctions';
 
 export class Setup {
 
@@ -8,6 +10,7 @@ export class Setup {
         const password = process.env.DEFAULT_ADMIN_PASSWORD;
         const name = process.env.DEFAULT_ADMIN_NAME || 'Administrator';
 
+        await this.migrateSlug();
         if (!email || !password || await UserModel.exists({ email })) {
             console.log('skipping admin creation', email);
             return;
@@ -20,5 +23,18 @@ export class Setup {
             name,
             roles: [Role.Admin, Role.Everyone]
         })
+    }
+
+    private async migrateSlug() {
+
+        const pages = await PageModel.find({ $exists: { slug: false } }, 'title');
+        for (let page of pages) {
+            await PageModel.updateOne({ _id: page._id },
+                {
+                    $set: {
+                        slug: slugify(page.title)
+                    }
+                })
+        }
     }
 }

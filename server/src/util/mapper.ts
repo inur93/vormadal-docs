@@ -12,9 +12,10 @@ class Mapper {
         return { id: _id.toJSON(), email, name, roles }
     }
 
-    public toGetPageSummary({ _id, title, createdOn, createdBy, modifiedOn, modifiedBy, author, folder }: Page): GetPageSummary {
+    public toGetPageSummary({ _id, slug, title, createdOn, createdBy, modifiedOn, modifiedBy, author, folder }: Page): GetPageSummary {
         return {
             id: _id.toJSON(),
+            slug,
             title,
             createdOn,
             modifiedOn,
@@ -25,9 +26,10 @@ class Mapper {
         }
     }
 
-    public toGetPage({ _id, title, content, createdOn, createdBy, modifiedOn, modifiedBy, author }: Page): GetPage {
+    public toGetPage({ _id, slug, title, content, createdOn, createdBy, modifiedOn, modifiedBy, author }: Page): GetPage {
         return {
             id: _id.toJSON(),
+            slug,
             title,
             content,
             createdOn,

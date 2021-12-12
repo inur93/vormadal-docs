@@ -44,16 +44,16 @@ requestBody: CreatePage,
     }
 
     /**
-     * @param pageId the unique id of the page
+     * @param identifier the UUID or slug of the page
      * @returns GetPage Ok
      * @throws ApiError
      */
     public static getPage(
-pageId: string,
+identifier: string,
 ): CancelablePromise<GetPage> {
         return __request({
             method: 'GET',
-            path: `/pages/${pageId}`,
+            path: `/pages/${identifier}`,
             errors: {
                 401: `Unauthorized`,
             },

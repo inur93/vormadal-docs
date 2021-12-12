@@ -1,6 +1,6 @@
 export const routes = {
     root: () => `/`,
-    page: (id?: string) => `/page/${id || ':id'}`,
-    editPage: (id?: string) => `/page/edit/${id || ':id'}`,
+    page: (slug?: string) => `/page/${slug || ':slug'}`,
+    editPage: (id?: string) => `/page/${id || ':id'}/edit`,
 
 }
