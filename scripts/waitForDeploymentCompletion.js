@@ -15,7 +15,7 @@ const arg = (key) => {
     const interval = arg('retryInterval') || 10000;
     const password = arg('password');
     const url = arg('url') || 'https://captain.caprover.vormadal.com';
-
+    const cwd = arg('cwd') || './';
     if (!appName) {
         console.log('appName is not specified');
         return;
@@ -28,9 +28,13 @@ const arg = (key) => {
     
     const check = (retryCount) => {
         exec(
-            `../node_modules/.bin/caprover api --caproverUrl ${url} ` +
+            // 'caprover',
+            `caprover api --caproverUrl ${url} ` +
             `--caproverPassword ${password} ` +
             "--path /user/apps/appDefinitions --method GET --data \"{}\"",
+            {
+                cwd: cwd
+            },
             (error, stdout, stderr) => {
                 if (error) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
@@ -71,7 +75,7 @@ const arg = (key) => {
                     }
 
                 } catch (e) {
-                    console.error(e.message);
+                    console.error(e.message, stdout);
                 }
             }
         )
