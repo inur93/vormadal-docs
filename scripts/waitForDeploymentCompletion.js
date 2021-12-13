@@ -26,7 +26,7 @@ const arg = (key) => {
         console.log('password is not specified');
         return;
     }
-    
+    console.log('cwd', cwd);
     const check = (retryCount) => {
         exec(
             // 'caprover',
@@ -40,13 +40,15 @@ const arg = (key) => {
                 if (error) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
                     console.log(error) //TODO remove - temp solution
-                    throw new Error("could not verify app " + appName);
+                    // throw new Error("could not verify app " + appName);
+                    return;
                 }
 
                 if (stderr) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
                     console.log(stderr) //TODO remove - temp solution
-                    throw new Error("could not verify app " + appName);
+                    // throw new Error("could not verify app " + appName);
+                    return;
                 }
 
                 try {
