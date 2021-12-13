@@ -6,7 +6,6 @@ version: 2.1
 orbs:
   node: circleci/node@4.7.0
   cypress: cypress-io/cypress@1
-
 jobs:
   deploy:
     executor: node/default
@@ -38,7 +37,9 @@ jobs:
       - run: pwd
       - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=/home/circleci/project/node_modules/.bin
   test:
-    executor: node/default
+    # executor: node/default
+    docker:
+      - image: cimg/node:16.13.1
     steps:
       - checkout
       - run: | 
@@ -56,19 +57,19 @@ workflows:
   deploy: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      # - deploy:
-      #     name: deploy-test
-      #     token: $TEST_APP_TOKEN
-      #     app: test-vormadal-docs
-      #     filters:
-      #       branches:
-      #         only:
-      #           - cypress
+      - deploy:
+          name: deploy-test
+          token: $TEST_APP_TOKEN
+          app: test-vormadal-docs
+          filters:
+            branches:
+              only:
+                - cypress
       - verify:
           name: verify-test
           app: test-vormadal-docs
-          # requires:
-          #   - deploy-test
+          requires:
+            - deploy-test
       - test
       # - cypress/run:
       #     name: run integration tests
