@@ -32,7 +32,7 @@ jobs:
     steps:
       - checkout
       - run: yarn add caprover
-      - run: ls && ls /
+      - run: pwd
       - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=/node_modules/.bin
 
       
@@ -43,19 +43,19 @@ workflows:
   deploy: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - deploy:
-          name: deploy-test
-          token: $TEST_APP_TOKEN
-          app: test-vormadal-docs
-          filters:
-            branches:
-              only:
-                - cypress
+      # - deploy:
+      #     name: deploy-test
+      #     token: $TEST_APP_TOKEN
+      #     app: test-vormadal-docs
+      #     filters:
+      #       branches:
+      #         only:
+      #           - cypress
       - verify:
           name: verify-test
           app: test-vormadal-docs
-          requires:
-            - deploy-test
+          # requires:
+          #   - deploy-test
       - cypress/run:
           name: run integration tests
           executor: cypress/base-14
