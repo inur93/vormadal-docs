@@ -52,7 +52,7 @@ const CustomContent = (contextMenuOptions?: ContextMenuOption[]) => (forwardRef<
             icon: iconProp,
             expansionIcon,
             displayIcon,
-
+            id
         } = props;
 
         const {
@@ -109,6 +109,7 @@ const CustomContent = (contextMenuOptions?: ContextMenuOption[]) => (forwardRef<
                 {/* <div className="MuiTreeItem-contentBar" /> */}
                 <div onClick={handleExpansion} className={classes.iconContainer}>{icon}</div>
                 <Typography
+                    data-cy='tree-node-label'
                     onContextMenu={handleContextMenu}
                     onClick={handleSelection}
                     component="div"
@@ -127,7 +128,7 @@ const CustomContent = (contextMenuOptions?: ContextMenuOption[]) => (forwardRef<
                         !!(contextMenu !== null && contextMenuOptions) &&
                         contextMenuOptions
                             .map(x => (
-                                <MenuItem key={`${nodeId}-${x.label}`}
+                                <MenuItem data-cy='tree-node-context-menu-item' key={`${nodeId}-${x.label}`}
                                     onClick={x.onClick}>
                                     {x.label}
                                 </MenuItem>

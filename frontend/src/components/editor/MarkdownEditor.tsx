@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageService, GetPage } from '../../api';
 import { EventBus, EventType } from '../../utils/eventBus';
-import {routes} from '../../utils/routes';
+import { routes } from '../../utils/routes';
 
 const Editor = () => {
     const [content, setContent] = useState('');
@@ -68,6 +68,7 @@ const Editor = () => {
                         onChange={e => setTitle(e.target.value)} />
 
                     <Button
+                        data-cy='save-btn'
                         color='primary'
                         variant='outlined'
                         startIcon={<Save />}
@@ -77,6 +78,7 @@ const Editor = () => {
                     </Button>
                     {' '}
                     <Button
+                        data-cy='cancel-btn'
                         color='primary'
                         variant='outlined'
                         startIcon={<Cancel />}
@@ -85,6 +87,7 @@ const Editor = () => {
                     </Button>
                     {' '}
                     <Button
+                        data-cy='duplicate-btn'
                         color='primary'
                         variant='outlined'
                         startIcon={<ContentCopy />}
@@ -93,6 +96,7 @@ const Editor = () => {
                     </Button>
                     {' '}
                     <Button
+                        data-cy='delete-btn'
                         color='error'
                         variant='outlined'
                         startIcon={<Delete />}

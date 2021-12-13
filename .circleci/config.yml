@@ -5,14 +5,34 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/orb-intro/
 orbs:
   node: circleci/node@4.7.0
+  cypress: cypress-io/cypress@1
 
 jobs:
   deploy:
     executor: node/default
+    parameters:
+      app:
+        type: string
+      token:
+        type: string
     steps:
       - checkout
       - run: yarn add caprover
-      - run: node_modules/.bin/caprover deploy -h https://captain.caprover.vormadal.com -b $CIRCLE_BRANCH -c ./captain-definition --appToken $APP_TOKEN  -a "vormadal-docs"
+      - run: >
+          node_modules/.bin/caprover deploy -h https://captain.caprover.vormadal.com 
+          -b $CIRCLE_BRANCH 
+          -c ./captain-definition 
+          --appToken << parameters.token >> 
+          -a "<< parameters.app >>"
+  verify:
+    executor: node/default
+    parameters:
+      app:
+        type: string
+    steps:
+      - checkout
+      - run: yarn global add caprover
+      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=$CAPTAIN_PASSWORD
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -21,7 +41,33 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - deploy:
+          name: deploy-test
+          token: $TEST_APP_TOKEN
+          app: test-vormadal-docs
           filters:
             branches:
               only:
                 - master
+      - verify:
+          name: verify-test
+          app: test-vormadal-docs
+          requires:
+            - deploy-test
+      - cypress/run:
+          store_artifacts: true
+          working_directory: frontend
+          yarn: true
+          env: 'CY_BASE_URL=${CY_BASE_URL},CY_TEST_USER_EMAIL=${CY_TEST_USER_EMAIL},CY_TEST_USER_PASSWORD=${CY_TEST_USER_PASSWORD}'
+          requires:
+            - verify-test
+      - deploy:
+          name: deploy-production
+          token: $APP_TOKEN
+          app: vormadal-docs
+          requires:
+            - "cypress/run"
+      - verify:
+          name: verify-production
+          app: vormadal-docs
+          requires:
+            - deploy-production

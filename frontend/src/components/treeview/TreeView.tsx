@@ -28,7 +28,10 @@ const addChildNodes = (node: Node, pages: Node[], folders: Node[], leaf: boolean
     }
 }
 
-export const TreeView = () => {
+type Props = {
+    id: string
+}
+export const TreeView = (props: Props) => {
     const [pages, setPages] = useState<GetPageSummary[]>([]);
     const [folders, setFolders] = useState<GetFolder[]>([]);
     const [data, setData] = useState<Node>();
@@ -179,6 +182,7 @@ export const TreeView = () => {
 
     const renderTree = (nodes: Node) => (
         <TreeNode
+            id={props.id}
             key={nodes.id}
             nodeId={nodes.id}
             label={nodes.name}

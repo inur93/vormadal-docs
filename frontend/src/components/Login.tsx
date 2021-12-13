@@ -42,7 +42,7 @@ export const Login = () => {
                         onChange={e => setPassword(e.target.value)} />
                 </Grid>
                 <Grid item xs={12} >
-                    <Button color='primary' type='submit'>
+                    <Button color='primary' type='submit' id="login-btn">
                         Login
                     </Button>
                 </Grid>

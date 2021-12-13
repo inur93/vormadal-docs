@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import { PageService, GetPage } from "../../api";
 import { EventBus, EventType } from "../../utils/eventBus";
-import {routes} from "../../utils/routes";
+import { routes } from "../../utils/routes";
 import { fancyDate } from "../../utils/stringFunctions";
 
 
@@ -30,7 +30,7 @@ export const Page = (props: Props) => {
                 })
         }
     }, [params.slug])
-    
+
     const handleCopy = async () => {
         const created = await PageService.createPage({
             title: `${page?.title} Copy`, content: page?.content || ''
@@ -70,6 +70,7 @@ export const Page = (props: Props) => {
                             {fancyDate(page.createdOn)}
                         </Typography>
                         <Button
+                            data-cy='edit-btn'
                             color='primary'
                             variant='outlined'
                             startIcon={<Edit />}
@@ -78,6 +79,7 @@ export const Page = (props: Props) => {
                         </Button>
                         {' '}
                         <Button
+                            data-cy='duplicate-btn'
                             color='primary'
                             variant='outlined'
                             startIcon={<ContentCopy />}
@@ -86,6 +88,7 @@ export const Page = (props: Props) => {
                         </Button>
                         {' '}
                         <Button
+                            data-cy='delete-btn'
                             color='error'
                             variant='outlined'
                             startIcon={<Delete />}

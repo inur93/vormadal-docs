@@ -25,6 +25,7 @@ export default function FormDialog({ title, description, placeholder, textFieldI
                     {description}
                 </DialogContentText>
                 <TextField
+                    data-cy='dialog-input'
                     autoFocus
                     value={value}
                     onChange={e => setValue(e.target.value)}
@@ -37,8 +38,8 @@ export default function FormDialog({ title, description, placeholder, textFieldI
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={onCancel}>Cancel</Button>
-                <Button onClick={() => onAccept(value)}>Ok</Button>
+                <Button data-cy='form-dialog-cancel' onClick={onCancel}>Cancel</Button>
+                <Button data-cy='form-dialog-ok' color='primary' onClick={() => onAccept(value)}>Ok</Button>
             </DialogActions>
         </Dialog>
     );

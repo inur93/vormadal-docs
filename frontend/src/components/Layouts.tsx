@@ -24,7 +24,7 @@ export const Layout = () => {
         {auth.isLoggedIn &&
             <Grid container spacing={2} style={{ paddingTop: '90px', height: '100vh', overflow: 'hidden' }}>
                 <Grid item xs={4} lg={3} >
-                    <TreeView />
+                    <TreeView id='navigation-tree' />
                 </Grid>
                 <Grid item xs={8} lg={9} style={{ overflow: 'hidden', height: '100%' }}>
                     <Outlet />
