@@ -28,7 +28,7 @@ const arg = (key) => {
     
     const check = (retryCount) => {
         exec(
-            `caprover api --caproverUrl ${url} ` +
+            `../node_modules/.bin/caprover api --caproverUrl ${url} ` +
             `--caproverPassword ${password} ` +
             "--path /user/apps/appDefinitions --method GET --data \"{}\"",
             (error, stdout, stderr) => {

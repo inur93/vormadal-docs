@@ -31,7 +31,7 @@ jobs:
         type: string
     steps:
       - checkout
-      - run: yarn global add caprover
+      - run: yarn add caprover
       - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD}
 
 # Invoke jobs via workflows
@@ -47,7 +47,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - cypress
       - verify:
           name: verify-test
           app: test-vormadal-docs
@@ -55,9 +55,8 @@ workflows:
             - deploy-test
       - cypress/run:
           name: run integration tests
-          cache-key: >-
-            cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
           executor: cypress/base-14
+          cache-key: cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
           store_artifacts: true
           working_directory: frontend
           yarn: true
