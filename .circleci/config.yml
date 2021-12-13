@@ -45,6 +45,7 @@ jobs:
       - run: | 
           cd frontend
           yarn
+          yarn add @cypress/xvfb
           yarn run cypress:run
       - store_artifacts:
           path: /home/circleci/project/frontend/cypress/videos
