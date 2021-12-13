@@ -68,25 +68,26 @@ workflows:
           app: test-vormadal-docs
           # requires:
           #   - deploy-test
-      - cypress/run:
-          name: run integration tests
-          executor: cypress/base-14
-          install-command: yarn install
-          cache-key: cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
-          store_artifacts: true
-          working_directory: frontend
-          yarn: true
-          env: 'CY_BASE_URL=${CY_BASE_URL},CY_TEST_USER_EMAIL=${CY_TEST_USER_EMAIL},CY_TEST_USER_PASSWORD=${CY_TEST_USER_PASSWORD}'
-          requires:
-            - verify-test
-      - deploy:
-          name: deploy-production
-          token: $APP_TOKEN
-          app: vormadal-docs
-          requires:
-            - "run integration tests"
-      - verify:
-          name: verify-production
-          app: vormadal-docs
-          requires:
-            - deploy-production
+      - test
+      # - cypress/run:
+      #     name: run integration tests
+      #     executor: cypress/base-14
+      #     install-command: yarn install
+      #     cache-key: cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
+      #     store_artifacts: true
+      #     working_directory: frontend
+      #     yarn: true
+      #     env: 'CY_BASE_URL=${CY_BASE_URL},CY_TEST_USER_EMAIL=${CY_TEST_USER_EMAIL},CY_TEST_USER_PASSWORD=${CY_TEST_USER_PASSWORD}'
+      #     requires:
+      #       - verify-test
+      # - deploy:
+      #     name: deploy-production
+      #     token: $APP_TOKEN
+      #     app: vormadal-docs
+      #     requires:
+      #       - "run integration tests"
+      # - verify:
+      #     name: verify-production
+      #     app: vormadal-docs
+      #     requires:
+      #       - deploy-production

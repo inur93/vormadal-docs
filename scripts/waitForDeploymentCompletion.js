@@ -34,7 +34,8 @@ const arg = (key) => {
             `--caproverPassword ${password} ` +
             "--path /user/apps/appDefinitions --method GET --data \"{}\"",
             {
-                cwd: cwd
+                cwd: cwd,
+                shell: '/bin/bash'
             },
             (error, stdout, stderr) => {
                 if (error) {
