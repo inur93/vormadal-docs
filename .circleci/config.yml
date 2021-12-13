@@ -32,7 +32,8 @@ jobs:
     steps:
       - checkout
       - run: yarn add caprover
-      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=node_modules/.bin
+      - run: ls && ls /
+      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=/node_modules/.bin
 
       
 
@@ -58,6 +59,7 @@ workflows:
       - cypress/run:
           name: run integration tests
           executor: cypress/base-14
+          install-command: yarn install
           cache-key: cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
           store_artifacts: true
           working_directory: frontend

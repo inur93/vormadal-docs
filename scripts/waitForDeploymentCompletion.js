@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const { errorMonitor } = require('events');
 
 const arg = (key) => {
     const keyValue = process.argv.find(x => x.startsWith(key));
@@ -39,13 +40,13 @@ const arg = (key) => {
                 if (error) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
                     console.log(error) //TODO remove - temp solution
-                    return;
+                    throw new Error("could not verify app " + appName);
                 }
 
                 if (stderr) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
                     console.log(stderr) //TODO remove - temp solution
-                    return;
+                    throw new Error("could not verify app " + appName);
                 }
 
                 try {
@@ -76,6 +77,7 @@ const arg = (key) => {
 
                 } catch (e) {
                     console.error(e.message, stdout);
+                    throw new Error("could not verify app " + appName);
                 }
             }
         )
