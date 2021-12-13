@@ -31,10 +31,6 @@ jobs:
     steps:
       - checkout
       - run: yarn add caprover
-      - run: ls /home/circleci/project/node_modules/.bin
-      - run: ls /home/circleci/project/frontend
-      - run: ls /home/circleci/project/
-      - run: pwd
       - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=/home/circleci/project/node_modules/.bin
   test:
     # executor: node/default
@@ -42,10 +38,10 @@ jobs:
       - image: cimg/node:16.13.1
     steps:
       - checkout
+      - run: apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
       - run: | 
           cd frontend
           yarn
-          yarn add @cypress/xvfb
           yarn run cypress:run
       - store_artifacts:
           path: /home/circleci/project/frontend/cypress/videos
