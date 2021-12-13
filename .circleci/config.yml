@@ -41,9 +41,10 @@ jobs:
     executor: node/default
     steps:
       - checkout
-      - run: cd frontend
-      - run: yarn
-      - run: yarn run cypress:run
+      - run: | 
+          cd frontend
+          yarn
+          yarn run cypress:run
       - store_artifacts:
           path: /home/circleci/project/frontend/cypress/videos
       - store_artifacts:

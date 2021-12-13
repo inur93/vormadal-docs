@@ -34,8 +34,11 @@ const arg = (key) => {
             `--caproverPassword ${password} ` +
             "--path /user/apps/appDefinitions --method GET --data \"{}\"",
             {
-                cwd: cwd,
-                shell: '/bin/bash'
+                // cwd: cwd,
+                // shell: '/bin/bash',
+                env: {
+                    "PATH": process.env.PATH + ':' + cwd
+                }
             },
             (error, stdout, stderr) => {
                 if (error) {
@@ -52,6 +55,7 @@ const arg = (key) => {
                     return;
                 }
 
+                console.log('running...');
                 try {
                     const content = stdout.toString().trim();
                     const response = JSON.parse(content.substring(content.indexOf("{")).trim());
@@ -65,6 +69,9 @@ const arg = (key) => {
                     const currentVersion = appDef.deployedVersion;
                     const latestVersion = appDef.versions[appDef.versions.length - 1].version;
 
+                    // console.log('appdef', appDef);
+                    // console.log('version', appDef.versions[appDef.versions.length - 1]);
+
                     if (currentVersion === latestVersion) {
                         console.log('deploy was successful.');
                         return;
@@ -74,12 +81,16 @@ const arg = (key) => {
                         throw new Error(`timeout... current version is ${currentVersion} and latest version is ${latestVersion}`);
                     }
 
+                    if(!appDef.isAppBuilding) {
+                        throw new Error('Deployment failed. see captain logs for more info');
+                    }
                     if (currentVersion !== latestVersion) {
+                        console.log('version do not match', currentVersion, latestVersion);
                         setTimeout(() => check(retryCount + 1), interval);
                     }
 
                 } catch (e) {
-                    console.error(e.message, stdout);
+                    console.error(e.message);
                     throw new Error("could not verify app " + appName);
                 }
             }
