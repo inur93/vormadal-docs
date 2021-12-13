@@ -54,9 +54,9 @@ describe('Pages', () => {
     cy.get(identifiers.dialogInput).type(pageName);
     cy.get(identifiers.dialogOk).click();
 
-    cy.get(identifiers.treeNodeLabel).filter(
+    // cy.get(identifiers.treeNodeLabel).filter(
       
-    )
+    // )
     // cy.get(identifiers.treeNodeLabel).should('have.length', 2)
     // cy.get(identifiers.deleteBtn).click();
 
