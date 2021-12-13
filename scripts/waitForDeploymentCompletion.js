@@ -34,11 +34,13 @@ const arg = (key) => {
             (error, stdout, stderr) => {
                 if (error) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
+                    console.log(error) //TODO remove - temp solution
                     return;
                 }
 
                 if (stderr) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
+                    console.log(stderr) //TODO remove - temp solution
                     return;
                 }
 

@@ -32,7 +32,7 @@ jobs:
     steps:
       - checkout
       - run: yarn global add caprover
-      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=$CAPTAIN_PASSWORD
+      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD}
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -54,6 +54,10 @@ workflows:
           requires:
             - deploy-test
       - cypress/run:
+          name: run integration tests
+          cache-key: >-
+            cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
+          executor: cypress/base-16
           store_artifacts: true
           working_directory: frontend
           yarn: true
