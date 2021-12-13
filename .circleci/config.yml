@@ -69,7 +69,7 @@ workflows:
           token: $APP_TOKEN
           app: vormadal-docs
           requires:
-            - "cypress/run"
+            - "run integration tests"
       - verify:
           name: verify-production
           app: vormadal-docs
