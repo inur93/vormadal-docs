@@ -33,7 +33,7 @@ jobs:
       - checkout
       - run: yarn add caprover
       - run: pwd
-      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=/node_modules/.bin
+      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=/home/circleci/project/node_modules/.bin
 
       
 
