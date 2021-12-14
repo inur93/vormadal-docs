@@ -32,21 +32,6 @@ jobs:
       - checkout
       - run: yarn add caprover
       - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=/home/circleci/project/node_modules/.bin
-  test:
-    # executor: node/default
-    docker:
-      - image: cimg/node:16.13.1
-    steps:
-      - checkout
-      - run: apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-      - run: | 
-          cd frontend
-          yarn
-          yarn run cypress:run
-      - store_artifacts:
-          path: /home/circleci/project/frontend/cypress/videos
-      - store_artifacts:
-          path: /home/circleci/project/frontend/cypress/screenshots
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -54,28 +39,27 @@ workflows:
   deploy: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      - deploy:
-          name: deploy-test
-          token: $TEST_APP_TOKEN
-          app: test-vormadal-docs
-          filters:
-            branches:
-              only:
-                - cypress
-      - verify:
-          name: verify-test
-          app: test-vormadal-docs
-          requires:
-            - deploy-test
-      # - test
+      # - deploy:
+      #     name: deploy-test
+      #     token: $TEST_APP_TOKEN
+      #     app: test-vormadal-docs
+      #     filters:
+      #       branches:
+      #         only:
+      #           - cypress
+      # - verify:
+      #     name: verify-test
+      #     app: test-vormadal-docs
+      #     requires:
+      #       - deploy-test
       - cypress/run:
           name: run integration tests
           executor: cypress/base-14
           # cypress does not yet have node 16 and markdown editor does not support lower versions properly thus ignore-engines
-          install-command: yarn install --ignore-engines
+          # install-command: yarn install --ignore-engines
           cache-key: cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
           #store_artifacts: true
-          working_directory: frontend
+          working_directory: integrationtests
           yarn: true
           env: 'CY_BASE_URL=${CY_BASE_URL},CY_TEST_USER_EMAIL=${CY_TEST_USER_EMAIL},CY_TEST_USER_PASSWORD=${CY_TEST_USER_PASSWORD}'
           record: true

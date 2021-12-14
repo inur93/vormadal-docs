@@ -37,9 +37,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate": "openapi --input ../server/build/swagger.json --output ./src/api --client axios",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "generate": "openapi --input ../server/build/swagger.json --output ./src/api --client axios"
   },
   "eslintConfig": {
     "extends": [
@@ -64,7 +62,6 @@
   },
   "devDependencies": {
     "@types/react-window": "^1.8.5",
-    "@types/styled-components": "^5.1.15",
-    "cypress": "^9.1.1"
+    "@types/styled-components": "^5.1.15"
   }
 }
