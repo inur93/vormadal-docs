@@ -74,13 +74,14 @@ workflows:
           # cypress does not yet have node 16 and markdown editor does not support lower versions properly thus ignore-engines
           install-command: yarn install --ignore-engines
           cache-key: cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
-          store_artifacts: true
+          #store_artifacts: true
           working_directory: frontend
           yarn: true
           env: 'CY_BASE_URL=${CY_BASE_URL},CY_TEST_USER_EMAIL=${CY_TEST_USER_EMAIL},CY_TEST_USER_PASSWORD=${CY_TEST_USER_PASSWORD}'
-          post-steps:
-            - store_test_results:
-                path: frontend/cypress/results
+          record: true
+          
+          #   - store_test_results:
+          #       path: frontend/cypress/results
           # requires:
           #   - verify-test
       # - deploy:
