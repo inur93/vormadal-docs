@@ -39,43 +39,36 @@ workflows:
   deploy: # This is the name of the workflow, feel free to change it to better match your workflow.
     # Inside the workflow, you define the jobs you want to run.
     jobs:
-      # - deploy:
-      #     name: deploy-test
-      #     token: $TEST_APP_TOKEN
-      #     app: test-vormadal-docs
-      #     filters:
-      #       branches:
-      #         only:
-      #           - cypress
-      # - verify:
-      #     name: verify-test
-      #     app: test-vormadal-docs
-      #     requires:
-      #       - deploy-test
+      - deploy:
+          name: deploy test
+          token: $TEST_APP_TOKEN
+          app: test-vormadal-docs
+          filters:
+            branches:
+              only:
+                - master
+      - verify:
+          name: verify test
+          app: test-vormadal-docs
+          requires:
+            - "deploy test" 
       - cypress/run:
           name: run integration tests
           executor: cypress/base-14
-          # cypress does not yet have node 16 and markdown editor does not support lower versions properly thus ignore-engines
-          # install-command: yarn install --ignore-engines
-          cache-key: cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
-          #store_artifacts: true
           working_directory: integrationtests
           yarn: true
           env: 'CY_BASE_URL=${CY_BASE_URL},CY_TEST_USER_EMAIL=${CY_TEST_USER_EMAIL},CY_TEST_USER_PASSWORD=${CY_TEST_USER_PASSWORD}'
           record: true
-          
-          #   - store_test_results:
-          #       path: frontend/cypress/results
-          # requires:
-          #   - verify-test
-      # - deploy:
-      #     name: deploy-production
-      #     token: $APP_TOKEN
-      #     app: vormadal-docs
-      #     requires:
-      #       - "run integration tests"
-      # - verify:
-      #     name: verify-production
-      #     app: vormadal-docs
-      #     requires:
-      #       - deploy-production
+          requires:
+            - "verify test" 
+      - deploy:
+          name: deploy production
+          token: $APP_TOKEN
+          app: vormadal-docs
+          requires:
+            - "run integration tests"
+      - verify:
+          name: verify-production
+          app: vormadal-docs
+          requires:
+            - "deploy production" 

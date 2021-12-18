@@ -18,15 +18,17 @@ const identifiers = {
   dialogCancel: '[data-cy=form-dialog-cancel]',
   deleteBtn: '[data-cy=delete-btn]'
 }
+
+const BASE_URL = Cypress.env('CY_BASE_URL') || 'http://localhost:4000';
 describe('Pages', () => {
   beforeEach(() => {
     // Cypress starts out with a blank slate for each test
     // so we must tell it to visit our website with the `cy.visit()` command.
     // Since we want to visit the same URL at the start of all our tests,
     // we include it in our beforeEach function so that it runs before each test
-    cy.visit(Cypress.env('CY_BASE_URL'));
-    cy.get('#email').type(Cypress.env('CY_TEST_USER_EMAIL'));
-    cy.get('#password').type(Cypress.env('CY_TEST_USER_PASSWORD'));
+    cy.visit(BASE_URL);
+    cy.get('#email').type(Cypress.env('CY_TEST_USER_EMAIL') || 'admin@vormadal.com');
+    cy.get('#password').type(Cypress.env('CY_TEST_USER_PASSWORD') || 'example');
     
     cy.get('#login-btn').click();
   })
@@ -43,6 +45,8 @@ describe('Pages', () => {
   it('Create new Page in root', () => {
     // We'll store our item text in a variable so we can reuse it
     const pageName = 'Why is this so easy?';
+
+    cy.intercept('POST', '/pages').as('createPage');
     cy.wait(1000); //wait for async re-render
     cy.get(identifiers.treeNodeLabel).should('have.length', 1)
 
@@ -54,15 +58,13 @@ describe('Pages', () => {
     cy.get(identifiers.dialogInput).type(pageName);
     cy.get(identifiers.dialogOk).click();
 
-    // cy.get(identifiers.treeNodeLabel).filter(
-      
-    // )
-    // cy.get(identifiers.treeNodeLabel).should('have.length', 2)
-    // cy.get(identifiers.deleteBtn).click();
-
-    // cy.get(identifiers.treeNodeLabel).should('have.length', 2)
+    cy.wait('@createPage').its('request.body').should()
   })
 
+  it('Navigate to page', () => {
+
+
+  })
   context('with a checked task', () => {
     beforeEach(() => {
 
