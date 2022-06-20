@@ -1,0 +1,12 @@
+{
+    "id": "page-1",
+    "slug": "new-page",
+    "title": "New Page",
+    "createdOn": "2021-11-25T20:44:48.500Z",
+    "modifiedOn": "2021-11-25T20:44:48.500Z",
+    "createdBy": "Administrator",
+    "modifiedBy": "Administrator",
+    "author": "Administrator",
+    "folder": "folder-1",
+    "content": "this is some test content"
+}

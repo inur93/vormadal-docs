@@ -1,4 +1,5 @@
 const { exec } = require('child_process');
+const { errorMonitor } = require('events');
 
 const arg = (key) => {
     const keyValue = process.argv.find(x => x.startsWith(key));
@@ -15,7 +16,7 @@ const arg = (key) => {
     const interval = arg('retryInterval') || 10000;
     const password = arg('password');
     const url = arg('url') || 'https://captain.caprover.vormadal.com';
-
+    const cwd = arg('cwd') || './';
     if (!appName) {
         console.log('appName is not specified');
         return;
@@ -25,25 +26,36 @@ const arg = (key) => {
         console.log('password is not specified');
         return;
     }
-    
+    console.log('cwd', cwd);
     const check = (retryCount) => {
         exec(
+            // 'caprover',
             `caprover api --caproverUrl ${url} ` +
             `--caproverPassword ${password} ` +
             "--path /user/apps/appDefinitions --method GET --data \"{}\"",
+            {
+                // cwd: cwd,
+                // shell: '/bin/bash',
+                env: {
+                    "PATH": process.env.PATH + ':' + cwd
+                }
+            },
             (error, stdout, stderr) => {
                 if (error) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
                     console.log(error) //TODO remove - temp solution
+                    // throw new Error("could not verify app " + appName);
                     return;
                 }
 
                 if (stderr) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
                     console.log(stderr) //TODO remove - temp solution
+                    // throw new Error("could not verify app " + appName);
                     return;
                 }
 
+                console.log('running...');
                 try {
                     const content = stdout.toString().trim();
                     const response = JSON.parse(content.substring(content.indexOf("{")).trim());
@@ -57,6 +69,9 @@ const arg = (key) => {
                     const currentVersion = appDef.deployedVersion;
                     const latestVersion = appDef.versions[appDef.versions.length - 1].version;
 
+                    // console.log('appdef', appDef);
+                    // console.log('version', appDef.versions[appDef.versions.length - 1]);
+
                     if (currentVersion === latestVersion) {
                         console.log('deploy was successful.');
                         return;
@@ -66,12 +81,17 @@ const arg = (key) => {
                         throw new Error(`timeout... current version is ${currentVersion} and latest version is ${latestVersion}`);
                     }
 
+                    if(!appDef.isAppBuilding) {
+                        throw new Error('Deployment failed. see captain logs for more info');
+                    }
                     if (currentVersion !== latestVersion) {
+                        console.log('version do not match', currentVersion, latestVersion);
                         setTimeout(() => check(retryCount + 1), interval);
                     }
 
                 } catch (e) {
                     console.error(e.message);
+                    throw new Error("could not verify app " + appName);
                 }
             }
         )

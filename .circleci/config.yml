@@ -6,7 +6,6 @@ version: 2.1
 orbs:
   node: circleci/node@4.7.0
   cypress: cypress-io/cypress@1
-
 jobs:
   deploy:
     executor: node/default
@@ -31,8 +30,8 @@ jobs:
         type: string
     steps:
       - checkout
-      - run: yarn global add caprover
-      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD}
+      - run: yarn add caprover
+      - run: node ./scripts/waitForDeploymentCompletion.js appName=<< parameters.app >> password=${CAPTAIN_PASSWORD} cwd=/home/circleci/project/node_modules/.bin
 
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
@@ -41,7 +40,7 @@ workflows:
     # Inside the workflow, you define the jobs you want to run.
     jobs:
       - deploy:
-          name: deploy-test
+          name: deploy test
           token: $TEST_APP_TOKEN
           app: test-vormadal-docs
           filters:
@@ -49,23 +48,21 @@ workflows:
               only:
                 - master
       - verify:
-          name: verify-test
+          name: verify test
           app: test-vormadal-docs
           requires:
-            - deploy-test
+            - "deploy test" 
       - cypress/run:
           name: run integration tests
-          cache-key: >-
-            cache-{{ arch }}-{{ .Branch }}-{{ checksum "frontend/package.json" }}
           executor: cypress/base-14
-          store_artifacts: true
-          working_directory: frontend
+          working_directory: integrationtests
           yarn: true
           env: 'CY_BASE_URL=${CY_BASE_URL},CY_TEST_USER_EMAIL=${CY_TEST_USER_EMAIL},CY_TEST_USER_PASSWORD=${CY_TEST_USER_PASSWORD}'
+          record: true
           requires:
-            - verify-test
+            - "verify test" 
       - deploy:
-          name: deploy-production
+          name: deploy production
           token: $APP_TOKEN
           app: vormadal-docs
           requires:
@@ -74,4 +71,4 @@ workflows:
           name: verify-production
           app: vormadal-docs
           requires:
-            - deploy-production
+            - "deploy production" 

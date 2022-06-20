@@ -1,0 +1,26 @@
+[
+    {
+        "id": "folder-1",
+        "name": "New Folder"
+    },
+    {
+        "id": "folder-2",
+        "name": "Test Folder",
+        "parentFolder": "folder-1"
+    },
+    {
+        "id": "folder-3",
+        "name": "Test 1",
+        "parentFolder": "folder-1"
+    },
+    {
+        "id": "folder-4",
+        "name": "Test 2",
+        "parentFolder": "folder-3"
+    },
+    {
+        "id": "folder-5",
+        "name": "Test asdf",
+        "parentFolder": "folder-4"
+    }
+]

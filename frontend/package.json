@@ -9,14 +9,12 @@
     "@mui/icons-material": "^5.1.0",
     "@mui/lab": "^5.0.0-alpha.55",
     "@mui/material": "^5.1.0",
-    "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
-    "@uiw/react-md-editor": "^3.6.6",
+    "@uiw/react-md-editor": "^3.8.5",
     "axios": "^0.24.0",
     "clsx": "^1.1.1",
     "date-fns": "^2.25.0",
@@ -39,9 +37,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate": "openapi --input ../server/build/swagger.json --output ./src/api --client axios",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "generate": "openapi --input ../server/build/swagger.json --output ./src/api --client axios"
   },
   "eslintConfig": {
     "extends": [
@@ -66,7 +62,6 @@
   },
   "devDependencies": {
     "@types/react-window": "^1.8.5",
-    "@types/styled-components": "^5.1.15",
-    "cypress": "^9.1.1"
+    "@types/styled-components": "^5.1.15"
   }
 }
