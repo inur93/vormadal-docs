@@ -3,7 +3,7 @@
     "cypress": "^9.1.1"
   },
   "scripts": {
-    "cypress:open": "cypress open",
+    "cypress:open": "cypress open --config baseUrl=http://localhost:4000",
     "cypress:run": "cypress run"
   }
 }
