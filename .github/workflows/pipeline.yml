@@ -1,0 +1,17 @@
+name: Vormadal Docs CI
+
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build docker image
+        run: |
+          yarn add caprover
+          node ./scripts/waitForDeploymentCompletion.js appName=test-vormada-docs password=${{ CAPROVER_PASSWORD }} 
