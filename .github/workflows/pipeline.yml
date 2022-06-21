@@ -14,4 +14,4 @@ jobs:
       - name: Build docker image
         run: |
           yarn add caprover
-          node ./scripts/waitForDeploymentCompletion.js appName=test-vormada-docs password=${{ CAPROVER_PASSWORD }} 
+          node ./scripts/waitForDeploymentCompletion.js appName=test-vormada-docs password=${{ secrets.CAPROVER_PASSWORD }} 
