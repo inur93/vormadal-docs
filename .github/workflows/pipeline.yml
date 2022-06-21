@@ -10,8 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Deploy to test
       - uses: actions/checkout@v3
-      - name: Build docker image
-        run: |
-          yarn add caprover
-          node ./scripts/waitForDeploymentCompletion.js appName=test-vormadal-docs password=${{ secrets.CAPROVER_PASSWORD }} cwd=node_modules/.bin
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - run: yarn add caprover
+      - run: >
+          node_modules/.bin/caprover deploy -h https://captain.caprover.vormadal.com 
+          -b ${{ github.ref }} 
+          -c ./captain-definition 
+          --appToken ${{ secrets.APP_TOKEN }}
+          -a "test-vormadal-docs"
+      - run: >
+          node ./scripts/waitForDeploymentCompletion.js 
+          appName=test-vormadal-docs 
+          password=${{ secrets.CAPROVER_PASSWORD }} 
+          cwd=node_modules/.bin
