@@ -46,7 +46,8 @@ jobs:
         with:
           working-directory: integrationtests
           record: true
-          env: CY_BASE_URL=${{ secrets.CY_BASE_URL }},CY_TEST_USER_EMAIL=${{ secrets.CY_TEST_USER_EMAIL }},CY_TEST_USER_PASSWORD=${{ secrets.TEST_USER_PASSWORD }}
+          config: baseUrl=${{ secrets.CY_BASE_URL }}
+          env: username=${{ secrets.CY_TEST_USER_EMAIL }},password=${{ secrets.CY_TEST_USER_PASSWORD }}
         env:
           # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}

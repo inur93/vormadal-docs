@@ -22,7 +22,7 @@ const ids = {
 describe('Pages', () => {
   beforeEach(() => {
 
-    cy.login();
+    cy.login(Cypress.env('username'), Cypress.env('password'));
     cy.visit('/')
   })
 
