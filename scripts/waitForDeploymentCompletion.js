@@ -1,5 +1,4 @@
 const { exec } = require('child_process');
-const { errorMonitor } = require('events');
 
 const arg = (key) => {
     const keyValue = process.argv.find(x => x.startsWith(key));
@@ -29,13 +28,10 @@ const arg = (key) => {
     console.log('cwd', cwd);
     const check = (retryCount) => {
         exec(
-            // 'caprover',
             `caprover api --caproverUrl ${url} ` +
             `--caproverPassword ${password} ` +
             "--path /user/apps/appDefinitions --method GET --data \"{}\"",
             {
-                // cwd: cwd,
-                // shell: '/bin/bash',
                 env: {
                     "PATH": process.env.PATH + ':' + cwd
                 }
@@ -43,16 +39,12 @@ const arg = (key) => {
             (error, stdout, stderr) => {
                 if (error) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
-                    console.log(error) //TODO remove - temp solution
-                    // throw new Error("could not verify app " + appName);
-                    return;
+                    throw new Error("could not verify app " + appName);
                 }
 
                 if (stderr) {
                     console.log(`error. message is not shown to avoid showing passwords etc`);
-                    console.log(stderr) //TODO remove - temp solution
-                    // throw new Error("could not verify app " + appName);
-                    return;
+                    throw new Error("could not verify app " + appName);
                 }
 
                 console.log('running...');
@@ -68,9 +60,6 @@ const arg = (key) => {
 
                     const currentVersion = appDef.deployedVersion;
                     const latestVersion = appDef.versions[appDef.versions.length - 1].version;
-
-                    // console.log('appdef', appDef);
-                    // console.log('version', appDef.versions[appDef.versions.length - 1]);
 
                     if (currentVersion === latestVersion) {
                         console.log('deploy was successful.');
@@ -100,3 +89,5 @@ const arg = (key) => {
     check(0);
 
 })();
+
+

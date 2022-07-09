@@ -1,0 +1,83 @@
+name: Vormadal Docs CI
+
+on:
+  push:
+    branches:
+      - "actions"
+
+jobs:
+  deploy-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Caprover
+        run: yarn add caprover
+      - name: Cache caprover
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - name: Deploy to Caprover
+        run: >
+          node_modules/.bin/caprover deploy -h https://captain.caprover.vormadal.com 
+          -b ${{ github.ref }} 
+          -c ./captain-definition 
+          --appToken ${{ secrets.APP_TOKEN }}
+          -a "test-vormadal-docs"
+      - name: Wait for deployment is done
+        run: >
+          node ./scripts/waitForDeploymentCompletion.js 
+          appName=test-vormadal-docs 
+          password=${{ secrets.CAPROVER_PASSWORD }} 
+          cwd=node_modules/.bin
+
+  test:
+    name: Cypress Integration Tests
+    needs: deploy-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Cypress
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: integrationtests
+          record: true
+          config: baseUrl=${{ secrets.CY_BASE_URL }}
+          env: username=${{ secrets.CY_TEST_USER_EMAIL }},password=${{ secrets.CY_TEST_USER_PASSWORD }}
+        env:
+          # pass the Dashboard record key as an environment variable
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          # pass GitHub token to allow accurately detecting a build vs a re-run build
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-prod:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Caprover
+        run: yarn add caprover
+      - name: Cache caprover
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - name: Deploy to Caprover
+        run: >
+          node_modules/.bin/caprover deploy -h https://captain.caprover.vormadal.com 
+          -b ${{ github.ref }} 
+          -c ./captain-definition 
+          --appToken ${{ secrets.PROD_APP_TOKEN }}
+          -a "vormadal-docs"
+      - name: Wait for deployment is done
+        run: >
+          node ./scripts/waitForDeploymentCompletion.js 
+          appName=vormadal-docs 
+          password=${{ secrets.CAPROVER_PASSWORD }} 
+          cwd=node_modules/.bin
