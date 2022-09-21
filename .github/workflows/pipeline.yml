@@ -3,7 +3,7 @@ name: Vormadal Docs CI
 on:
   push:
     branches:
-      - "actions"
+      - "master"
 
 jobs:
   deploy-test:
@@ -31,6 +31,7 @@ jobs:
           node ./scripts/waitForDeploymentCompletion.js 
           appName=test-vormadal-docs 
           password=${{ secrets.CAPROVER_PASSWORD }} 
+          url=https://captain.caprover.vormadal.com 
           cwd=node_modules/.bin
 
   test:
